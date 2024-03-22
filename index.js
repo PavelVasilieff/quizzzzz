@@ -31,9 +31,9 @@ async function first(arr) {
     );
     const inp = `input${i}`;
     if (rez[i][inp] === arr[i].answer) {
-      console.log(chalk.green('Молодец, go next'));
+      console.log(chalk.green('Молодец, go next\n'));
       num += 20;
-    } else console.log(`Нет, правильный ответ: ${chalk.red(arr[i].answer)}`);
+    } else console.log(`Нет, правильный ответ: ${chalk.red(arr[i].answer)}\n`);
   }
   return num;
 }
