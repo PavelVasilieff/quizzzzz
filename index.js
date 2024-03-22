@@ -11,6 +11,7 @@ async function read(path) {
       arr.push({ message: readArr[i - 2], answer: readArr[i - 1] });
     }
   }
+  console.log(arr);
   return arr;
 }
 
@@ -34,9 +35,30 @@ async function first(arr) {
 }
 
 async function start() {
-  const spisok = await read('nighthawk_flashcard_data.txt');
+  const namePath = await vibor();
+  const spisok = await read(namePath.path);
   const answer = await first(spisok);
-  console.log(answer);
+  console.log(`Поздравляем, ${namePath.name} завершили квест`);
 }
 
 start();
+
+async function vibor() {
+  const namePath = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'Name',
+      message: 'Введите имя: ',
+    },
+    {
+      type: 'list',
+      name: 'path',
+      message: 'Выбери КВИЗ',
+      choices: [
+        { name: 'Загадки', value: './zagadki.txt' },
+        { name: 'Тюремная тематика', value: './tyrma.txt' },
+      ],
+    },
+  ]);
+  return namePath;
+}
