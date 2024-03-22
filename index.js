@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const fs = require('fs').promises;
 const { EOL } = require('os');
 const chalk = require('chalk');
+const catLogo = require('./indexx');
 
 async function read(path) {
   const readFile = await fs.readFile(`./${path}`, 'utf-8');
@@ -30,9 +31,9 @@ async function first(arr) {
     );
     const inp = `input${i}`;
     if (rez[i][inp] === arr[i].answer) {
-      console.log('Молодец!');
+      console.log(chalk.green('Молодец, go next'));
       num += 20;
-    } else console.log(`Нет, правильный ответ: ${arr[i].answer}`);
+    } else console.log(`Нет, правильный ответ: ${chalk.red(arr[i].answer)}`);
   }
   return num;
 }
@@ -42,6 +43,13 @@ async function start() {
   const spisok = await read(namePath.path);
   const answer = await first(spisok);
 
+  await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'Gj',
+      message: 'Подсчет очков?',
+    },
+  ]);
   await log();
   await new Promise((res) => {
     setTimeout(() => {
@@ -49,13 +57,7 @@ async function start() {
     }, 400);
   });
   console.clear();
-  console.log(
-    `\n${chalk.red('!!!!!!!')} Поздравляем, ${chalk.yellow(
-      namePath.name
-    )} завершил(а) квест с результатом: ${chalk.yellow(
-      answer
-    )} из 100 ${chalk.red('!!!!!!!')}`
-  );
+  catLogo(namePath.name, answer);
 }
 
 async function vibor() {
@@ -64,8 +66,8 @@ async function vibor() {
       type: 'input',
       name: 'name',
       message: 'Кто ты воин?',
-      validate(qq) {
-        if (qq === '') {
+      validate(answer) {
+        if (answer === '') {
           return 'Не молчи!!';
         }
         return true;
@@ -90,7 +92,7 @@ async function log() {
     console.log(
       `Подсчет результатов: [${'|'.repeat(i * 2)}${'.'.repeat(
         20 - i * 2
-      )}] ${Math.ceil((i * 2) / 20 * 100)} / 100 %`
+      )}] ${Math.ceil(((i * 2) / 20) * 100)} / 100 %`
     );
     await new Promise((res) => {
       setTimeout(() => {
